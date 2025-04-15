@@ -1,6 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { NumericFormat } from 'react-number-format';
+import { Link } from 'react-router-dom';
+import '../App.css';
+import { EliminarEmpleado } from './EliminarEmpleado';
 
 export default function ListadoEmpleados() {
   
@@ -13,10 +16,10 @@ export default function ListadoEmpleados() {
 
     const cargarEmpleados = async () => {
         const resultado = await axios.get(urlBase);
-        console.log("resultado Empleados");
-        console.log(resultado.data);
         setEmpleados(resultado.data);
     }
+
+
     const prepararValoresEmpleado = (empleado) => {
         return {
             value: empleado.sueldo,
@@ -31,7 +34,7 @@ export default function ListadoEmpleados() {
     return (
     <div className='container'>
         <div className='container text-center' style={{margin: "30px"}}>
-            <h3>Sistema de Recursos Humanos</h3>
+            <h3>Empleados de Recursos Humanos</h3>
         </div>
         <table className="table table-striped table-hover align-middle">
             <thead className='table-dark'>
@@ -40,6 +43,7 @@ export default function ListadoEmpleados() {
                     <th scope="col">Empleado</th>
                     <th scope="col">Departamento</th>
                     <th scope="col">Sueldo</th>
+                    <th style={{ backgroundColor: "black", color: "white" }}></th>
                 </tr>
             </thead>
             <tbody>
@@ -59,6 +63,17 @@ export default function ListadoEmpleados() {
                     </td>
                     <td>
                         <NumericFormat {...prepararValoresEmpleado(empleado)} />
+                    </td>
+                
+                    <td className='text-center'>
+                        <div>
+                            <Link to={`/editar/${empleado.idEmpleado}`}
+                            className='btn btn-warning btn-sm me-3'>Editar</Link>
+                            <EliminarEmpleado
+                            idEmpleado={empleado.idEmpleado}
+                            onDelete={cargarEmpleados} // Refresca la lista después de eliminar
+                            />
+                        </div>
                     </td>
                 </tr>
             ))}
